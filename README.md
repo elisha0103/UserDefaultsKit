@@ -36,6 +36,16 @@ final class AppDefaults: ObservableObject {
     @AutoKeyUserDefault var userName: String = ""
     @AutoKeyUserDefault var userAge: Int = 18
     @AutoKeyUserDefault var isLoggedIn: Bool = false
+
+    func binding<T>(_ keyPath: ReferenceWritableKeyPath<AppDefaults, T>) -> Binding<T> {
+        Binding(
+            get: { self[keyPath: keyPath] },
+            set: { newValue in
+                self.objectWillChange.send()
+                self[keyPath: keyPath] = newValue
+            }
+        )
+    }
 }
 
 // SwiftUI
