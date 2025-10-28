@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  AutoKeyUserDefaultMacroTests.swift
 //  UserDefaultsKit
 //
 //  Created by 진태영 on 10/28/25.
@@ -56,6 +56,53 @@ final class AutoKeyUserDefaultMacroTests: XCTestCase {
                 set {
                     objectWillChange.send()
                     UserDefaults.standard.set(newValue, forKey: "isLoggedIn")
+                }
+            }
+            """,
+            macros: testMacros
+        )
+    }
+    
+    func testCustomKey() throws {
+        assertMacroExpansion(
+            """
+            @AutoKeyUserDefault(key: "user_name") var userName: String = ""
+            """,
+            expandedSource: """
+            var userName: String = "" {
+                get {
+                    guard let value = UserDefaults.standard.object(forKey: "user_name") else {
+                        return ""
+                    }
+                    return value as? String ?? ""
+                }
+                set {
+                    objectWillChange.send()
+                    UserDefaults.standard.set(newValue, forKey: "user_name")
+                }
+            }
+            """,
+            macros: testMacros
+        )
+    }
+    
+    func testURLProperty() throws {
+        assertMacroExpansion(
+            """
+            @AutoKeyUserDefault var homepage: URL = URL(string: "https://example.com")!
+            """,
+            expandedSource: """
+            var homepage: URL = URL(string: "https://example.com")! {
+                get {
+                    guard let urlString = UserDefaults.standard.string(forKey: "homepage"),
+                          let url = URL(string: urlString) else {
+                        return URL(string: "https://example.com")!
+                    }
+                    return url
+                }
+                set {
+                    objectWillChange.send()
+                    UserDefaults.standard.set(newValue.absoluteString, forKey: "homepage")
                 }
             }
             """,
