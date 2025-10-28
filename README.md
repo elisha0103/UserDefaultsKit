@@ -1,11 +1,3 @@
-//
-//  README.md
-//  UserDefaultsKit
-//
-//  Created by 진태영 on 10/28/25.
-//
-
-
 # UserDefaultsKit
 
 Swift Macro를 사용한 타입 안전한 UserDefaults 래퍼
