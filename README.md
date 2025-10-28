@@ -1,11 +1,3 @@
-//
-//  README.md
-//  UserDefaultsKit
-//
-//  Created by 진태영 on 10/28/25.
-//
-
-
 # UserDefaultsKit
 
 Swift Macro를 사용한 타입 안전한 UserDefaults 래퍼
@@ -44,6 +36,16 @@ final class AppDefaults: ObservableObject {
     @AutoKeyUserDefault var userName: String = ""
     @AutoKeyUserDefault var userAge: Int = 18
     @AutoKeyUserDefault var isLoggedIn: Bool = false
+
+    func binding<T>(_ keyPath: ReferenceWritableKeyPath<AppDefaults, T>) -> Binding<T> {
+        Binding(
+            get: { self[keyPath: keyPath] },
+            set: { newValue in
+                self.objectWillChange.send()
+                self[keyPath: keyPath] = newValue
+            }
+        )
+    }
 }
 
 // SwiftUI
