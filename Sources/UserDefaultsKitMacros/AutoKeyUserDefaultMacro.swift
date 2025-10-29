@@ -36,7 +36,7 @@ public struct AutoKeyUserDefaultMacro: AccessorMacro {
         return [
             """
             get {
-                UserDefaults.standard.object(forKey: "\(raw: actualKey)") as? \(raw: typeName) ?? \(defaultValue)
+                UserDefaults.standard.object(forKey: "\(raw: actualKey)") as? \(raw: typeName) ?? \(raw: defaultValue)
             }
             """,
             """
